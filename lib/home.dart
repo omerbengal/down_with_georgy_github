@@ -40,8 +40,8 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   @override
   initState() {
     getDeviceID();
-    getDevicesIDFromFirebase();
-    getOmerDviceID();
+    getDeviceNameByID();
+    getOmerDeviceID();
     super.initState();
 //    initializationSettingsAndroid =
 //        new AndroidInitializationSettings('app_icon');
@@ -51,18 +51,19 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
 //        initializationSettingsAndroid, initializationSettingsIOS);
 //    flutterLocalNotificationsPlugin.initialize(initializationSettings,
 //        onSelectNotification: onSelectNotification);
-//    timer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
+    timer = Timer.periodic(Duration(milliseconds: 500), (Timer t) {
+      getDevicesIDToList();
 ////      getOpacity();
 ////      _showNotification();
-//    });
+    });
   }
 
 //
-//  @override
-//  void dispose() {
-//    timer?.cancel();
-//    super.dispose();
-//  }
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +330,21 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
 //    });
   }
 
-  Future<void> getDevicesIDFromFirebase() async {
+  Future<void> getDeviceNameByID() async {
+    await Firestore.instance
+        .collection('booleans')
+        .document('uIX5KE7Wv07PcoYPOlyJ')
+        .get()
+        .then((value) {
+        for (int i = 0; i < value.data.values.toList().length; i++) {
+          if (deviceID == value.data.values.toList()[i]) {
+            _deviceNameByID = value.data.keys.toList()[i];
+          }
+        }
+    });
+  }
+
+  Future<void> getDevicesIDToList() async {
     await Firestore.instance
         .collection('booleans')
         .document('uIX5KE7Wv07PcoYPOlyJ')
@@ -345,17 +360,21 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
           idList[i] = value.data.values.toList()[i];
         }
       });
-      isAllowedToUseApp();
     });
+    isAllowedToUseApp();
   }
 
   void isAllowedToUseApp() {
     for (int i = 0; i < idList.length; i++) {
       if (deviceID == idList[i]) {
-        _premissionToUse = true;
+        setState(() {
+          _premissionToUse = true;
+        });
         break;
-//      } else {
-        _premissionToUse = false;
+      } else {
+        setState(() {
+          _premissionToUse = false;
+        });
       }
     }
 //    print("isAllowedToUseApp Done");
@@ -363,11 +382,10 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
 
   Future<void> refreshFunctions() async {
     await getOpacity();
-    await getDevicesIDFromFirebase();
-//    await getOmerDviceID();
+    await getDevicesIDToList();
   }
 
-  Future<void> getOmerDviceID() async {
+  Future<void> getOmerDeviceID() async {
     await Firestore.instance
         .collection('booleans')
         .document('uIX5KE7Wv07PcoYPOlyJ')
