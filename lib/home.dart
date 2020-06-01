@@ -6,7 +6,7 @@ import 'package:device_id/device_id.dart';
 import 'package:flutter/services.dart';
 import 'georgyAwakeIcon.dart';
 import 'georgyAsleepIcon.dart';
-//import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class GeorgyHomePage extends StatefulWidget {
   @override
