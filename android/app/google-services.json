@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "827840185489",
+    "firebase_url": "https://down-with-georgy.firebaseio.com",
+    "project_id": "down-with-georgy",
+    "storage_bucket": "down-with-georgy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827840185489:android:4ac3cf09bc72aaf938ab30",
+        "android_client_info": {
+          "package_name": "com.bengi.downwithgeorgy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827840185489-pa9o30f5v26hvdi6q4orsjnv8fmtsmfn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWn5_R37i7zA3RcSWkuRKQgIsfs78d1WE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827840185489-pa9o30f5v26hvdi6q4orsjnv8fmtsmfn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "827840185489-g7jjtie26pj46dq10u9ve7n46i7qccrj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bengi.downWithGeorgy"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827840185489:android:db19f53b1790ddef38ab30",
+        "android_client_info": {
+          "package_name": "com.example.downwithgeorgy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827840185489-pa9o30f5v26hvdi6q4orsjnv8fmtsmfn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWn5_R37i7zA3RcSWkuRKQgIsfs78d1WE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827840185489-pa9o30f5v26hvdi6q4orsjnv8fmtsmfn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "827840185489-g7jjtie26pj46dq10u9ve7n46i7qccrj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bengi.downWithGeorgy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
