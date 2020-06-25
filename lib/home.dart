@@ -366,7 +366,9 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   }
 
   void isAllowedToUseApp() {
-    for (int i = 0; i < idList.lengtif (deviceID == idList[i]) {h; i++) {
+    for (int i = 0; i < idList.length; i++)
+      {
+    if (deviceID == idList[i]) {
 
     setState(() {
           _premissionToUse = true;
