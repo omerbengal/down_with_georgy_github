@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
+import 'FirebaseMessagingDemo.dart';
 
 void main() {
   runApp(new MaterialApp(
+//      home: GeorgyHomePage(),
       home: GeorgyHomePage(),
-      debugShowCheckedModeBanner: false
-  ));
+      debugShowCheckedModeBanner: false));
 }
 
 class MyApp extends StatelessWidget {

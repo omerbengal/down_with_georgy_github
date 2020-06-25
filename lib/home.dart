@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'georgyAwakeIcon.dart';
 import 'georgyAsleepIcon.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'FirebaseMessagingDemo.dart';
 
 class GeorgyHomePage extends StatefulWidget {
   @override
@@ -365,9 +366,9 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   }
 
   void isAllowedToUseApp() {
-    for (int i = 0; i < idList.length; i++) {
-      if (deviceID == idList[i]) {
-        setState(() {
+    for (int i = 0; i < idList.lengtif (deviceID == idList[i]) {h; i++) {
+
+    setState(() {
           _premissionToUse = true;
         });
         break;
