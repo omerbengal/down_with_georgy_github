@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
-import 'FirebaseMessagingDemo.dart';
 
 void main() {
   runApp(new MaterialApp(

@@ -22,10 +22,7 @@ environment:
 
 dependencies:
   cloud_firestore:
-  firebase_auth:
-  firebase_messaging:
   device_id:
-  flutter_local_notifications:
   flutter:
     sdk: flutter
 
