@@ -389,6 +389,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   Future<void> refreshFunctions() async {
     await getOpacity();
     await getDevicesIDToList();
+    await getOmerDeviceID();
   }
 
   Future<void> getOmerDeviceID() async {
