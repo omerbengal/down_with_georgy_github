@@ -6,6 +6,7 @@ import 'package:device_id/device_id.dart';
 import 'package:flutter/services.dart';
 import 'georgyAwakeIcon.dart';
 import 'georgyAsleepIcon.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class GeorgyHomePage extends StatefulWidget {
   @override
@@ -21,6 +22,11 @@ class GeorgyHomePage extends StatefulWidget {
 }
 
 class _GeorgyHomePageState extends State<GeorgyHomePage> {
+//  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+
+//  var initializationSettingsAndroid;
+//  var initializationSettingsIOS;
+//  var initializationSettings;
 
   bool _premissionToReset = false;
   var dbForUsing;
@@ -34,29 +40,35 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   @override
   initState() {
     getDeviceID();
-    getDeviceNameByID();
-    getOmerDeviceID();
+    getDevicesIDFromFirebase();
+    getOmerDviceID();
     super.initState();
-    timer = Timer.periodic(Duration(milliseconds: 500), (Timer t) {
-      getDevicesIDToList();
+//    initializationSettingsAndroid =
+//        new AndroidInitializationSettings('app_icon');
+//    initializationSettingsIOS = new IOSInitializationSettings(
+//        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+//    initializationSettings = new InitializationSettings(
+//        initializationSettingsAndroid, initializationSettingsIOS);
+//    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+//        onSelectNotification: onSelectNotification);
+//    timer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
 ////      getOpacity();
 ////      _showNotification();
-    });
+//    });
   }
 
 //
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
+//  @override
+//  void dispose() {
+//    timer?.cancel();
+//    super.dispose();
+//  }
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = (MediaQuery
-        .of(context)
-        .size
-        .height);
+//    double screenHeight = (MediaQuery.of(context).size.height - AppBar().preferredSize.height);
+    double screenHeight = (MediaQuery.of(context).size.height);
+    double screenwidth = (MediaQuery.of(context).size.width);
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -68,6 +80,13 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
+//        actions: <Widget>[
+//          Container(
+//            width: screenwidth / 3,
+//            color: Colors.red,
+//            child: Text("lol"),
+//          ),
+//        ],
         title: GestureDetector(
           child: Text(
             "ג׳ורג׳י!",
@@ -92,6 +111,21 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
               decoration: BoxDecoration(color: Colors.blue[100]),
               child: ListView(
                 children: <Widget>[
+                  Center(
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(
+                          0, screenHeight * 0.01, 0, screenHeight * 0.01),
+                      child: Text("היום: " +
+                          DateTime.now().month.toString() +
+                              " / " +
+                          DateTime.now().day.toString(),
+                          style: TextStyle(
+                            fontSize: screenHeight / 25,
+                            fontFamily: 'SpecialFont',
+                          ),
+                      textDirection: TextDirection.rtl,),
+                    ),
+                  ),
                   GeorgyAwakeIcon(),
                   GeorgyAsleepIcon(),
                   Row(
@@ -101,11 +135,8 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                           margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
                               screenHeight * 0.01, screenHeight * 0.05, 0),
                           child: IconButton(
-                              iconSize: (MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height -
-                                  AppBar().preferredSize.height) *
+                              iconSize: (MediaQuery.of(context).size.height -
+                                      AppBar().preferredSize.height) *
                                   0.055,
                               icon: Icon(Icons.add_to_home_screen),
                               onPressed: () {
@@ -128,41 +159,38 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                           margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
                               screenHeight * 0.01, screenHeight * 0.05, 0),
                           child: IconButton(
-                              iconSize: (MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height -
-                                  AppBar().preferredSize.height) *
+                              iconSize: (MediaQuery.of(context).size.height -
+                                      AppBar().preferredSize.height) *
                                   0.055,
                               icon: Icon(Icons.cancel),
                               onPressed: _premissionToUse
                                   ? () {
-                                if (_premissionToReset ||
-                                    deviceID == omerDeviceID) {
-                                  if (GeorgyAwakeIcon.getOpacity() ==
-                                      0.4 ||
-                                      GeorgyAsleepIcon.getOpacity() ==
-                                          0.4) {
-                                    _thingsToCancelDialog();
-                                  } else {
-                                    _noThingsToDoDialog();
-                                  }
-                                } else {
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        _deviceNameByID +
-                                            ', '
-                                                'אין לך הרשאות לבטל ירידה... נא לפנות לעומר בנגל המלך!'
-                                                ' (או למצוא את הEASTER EGG)',
-                                        textDirection: TextDirection.rtl,
-                                      ),
-                                      duration:
-                                      const Duration(seconds: 3),
-                                    ),
-                                  );
-                                }
-                              }
+                                      if (_premissionToReset ||
+                                          deviceID == omerDeviceID) {
+                                        if (GeorgyAwakeIcon.getOpacity() ==
+                                                0.4 ||
+                                            GeorgyAsleepIcon.getOpacity() ==
+                                                0.4) {
+                                          _thingsToCancelDialog();
+                                        } else {
+                                          _noThingsToDoDialog();
+                                        }
+                                      } else {
+                                        Scaffold.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              _deviceNameByID +
+                                                  ', '
+                                                      'אין לך הרשאות לבטל ירידה... נא לפנות לעומר בנגל המלך!'
+                                                      ' (או למצוא את הEASTER EGG)',
+                                              textDirection: TextDirection.rtl,
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                          ),
+                                        );
+                                      }
+                                    }
                                   : null)),
                     ],
                   )
@@ -182,10 +210,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
-        var screenHeight = (MediaQuery
-            .of(context)
-            .size
-            .height);
+        var screenHeight = (MediaQuery.of(context).size.height);
         return AlertDialog(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -261,10 +286,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
-        var screenHeight = (MediaQuery
-            .of(context)
-            .size
-            .height);
+        var screenHeight = (MediaQuery.of(context).size.height);
         return AlertDialog(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -330,35 +352,15 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
 //    });
   }
 
-  Future<void> getDeviceNameByID() async {
-    await Firestore.instance
-        .collection('booleans')
-        .document('uIX5KE7Wv07PcoYPOlyJ')
-        .get()
-        .then((value) {
-      for (int i = 0; i < value.data.values
-          .toList()
-          .length; i++) {
-        if (deviceID == value.data.values.toList()[i]) {
-          _deviceNameByID = value.data.keys.toList()[i];
-        }
-      }
-    });
-  }
-
-  Future<void> getDevicesIDToList() async {
+  Future<void> getDevicesIDFromFirebase() async {
     await Firestore.instance
         .collection('booleans')
         .document('uIX5KE7Wv07PcoYPOlyJ')
         .get()
         .then((value) {
       setState(() {
-        idList.length = value.data.values
-            .toList()
-            .length;
-        for (int i = 0; i < value.data.values
-            .toList()
-            .length; i++) {
+        idList.length = value.data.values.toList().length;
+        for (int i = 0; i < value.data.values.toList().length; i++) {
           if (deviceID == value.data.values.toList()[i]) {
             _deviceNameByID = value.data.keys.toList()[i];
           }
@@ -366,21 +368,17 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
           idList[i] = value.data.values.toList()[i];
         }
       });
+      isAllowedToUseApp();
     });
-    isAllowedToUseApp();
   }
 
   void isAllowedToUseApp() {
     for (int i = 0; i < idList.length; i++) {
       if (deviceID == idList[i]) {
-        setState(() {
-          _premissionToUse = true;
-        });
+        _premissionToUse = true;
         break;
-      } else {
-        setState(() {
-          _premissionToUse = false;
-        });
+//      } else {
+        _premissionToUse = false;
       }
     }
 //    print("isAllowedToUseApp Done");
@@ -388,23 +386,158 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
 
   Future<void> refreshFunctions() async {
     await getOpacity();
-    await getDevicesIDToList();
-    await getOmerDeviceID();
+    await getDevicesIDFromFirebase();
+//    await getOmerDviceID();
   }
 
-  Future<void> getOmerDeviceID() async {
+  Future<void> getOmerDviceID() async {
     await Firestore.instance
         .collection('booleans')
         .document('uIX5KE7Wv07PcoYPOlyJ')
         .get()
         .then((value) {
-      for (int i = 0; i < value.data.values
-          .toList()
-          .length; i++) {
+      for (int i = 0; i < value.data.values.toList().length; i++) {
         if (value.data.keys.toList()[i] == "עומר") {
           omerDeviceID = value.data.values.toList()[i];
         }
       }
     });
   }
+
+/////////////////////////////////////////////////////////
+
+//  void _showNotification() async {
+//    //מרכזי
+//    if (GeorgyAwakeIcon.getNoonNotification()) {
+//
+//      await Firestore.instance
+//          .collection('booleans')
+//          .document('lukAMY1dkyDsuTpdCtZr')
+//          .get()
+//          .then((value) async {
+//        for (int i = 0; i < value.data.values.toList().length; i++) {
+//          if (value.data.keys.toList()[i] == "whoWentDownNoon") {
+//            if (_deviceNameByID != value.data.values.toList()[i]) {
+//              await _notification();
+//            }
+//          }
+//        }
+//      });
+//
+////      if(_deviceNameByID != GeorgyAwakeIcon.getWhoWentDownNoon()) {
+////        await _notification();
+////      }
+//
+//      await Firestore.instance
+//          .collection('booleans')
+//          .document('lukAMY1dkyDsuTpdCtZr')
+//          .updateData({"NoonNotification": false});
+//
+//    } else if (GeorgyAsleepIcon.getEveningNotification()) {
+//
+//      await Firestore.instance
+//          .collection('booleans')
+//          .document('lukAMY1dkyDsuTpdCtZr')
+//          .get()
+//          .then((value) async {
+//        for (int i = 0; i < value.data.values.toList().length; i++) {
+//          if (value.data.keys.toList()[i] == "whoWentDownEvening") {
+//            if (_deviceNameByID != value.data.values.toList()[i]) {
+//              await _notification();
+//            }
+//          }
+//        }
+//      });
+//
+////    if(_deviceNameByID != GeorgyAsleepIcon.getWhoWentDownEvening()) {
+////      await _notification();
+////    }
+//
+//      await Firestore.instance
+//          .collection('booleans')
+//          .document('lukAMY1dkyDsuTpdCtZr')
+//          .updateData({"EveningNotification": false});
+//
+//    }
+//  }
+//
+//  Future<void> _notification() async {
+//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+//        'channelId', 'channelName', 'channelDescription',
+//        importance: Importance.Max,
+//        priority: Priority.High,
+//        ticker: 'test Ticker');
+//
+//    var iOSChannelSpecifics = IOSNotificationDetails();
+//
+//    var platformChannelSpecifics = NotificationDetails(
+//        androidPlatformChannelSpecifics, iOSChannelSpecifics);
+//
+//    await flutterLocalNotificationsPlugin.show(0, "ג'ורג'י!",
+//        "מישהו ירד עם ג'ורג'י! גלה מי זה!", platformChannelSpecifics,
+//        payload: 'test payload');
+//  }
+//
+//  Future<void> _resetNotification() async {
+//    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+//        'channelId', 'channelName', 'channelDescription',
+//        importance: Importance.Max,
+//        priority: Priority.High,
+//        ticker: 'test Ticker');
+//
+//    var iOSChannelSpecifics = IOSNotificationDetails();
+//
+//    var platformChannelSpecifics = NotificationDetails(
+//        androidPlatformChannelSpecifics, iOSChannelSpecifics);
+//
+//    await flutterLocalNotificationsPlugin.show(
+//        0, "איפוס", "צריך לאפס את הנתונים!!", platformChannelSpecifics,
+//        payload: 'test payload');
+//  }
+//
+//  Future onDidReceiveLocalNotification(
+//      int id, String title, String body, String payload) async {
+//    await showDialog(
+//        context: context,
+//        builder: (BuildContext context) => CupertinoAlertDialog(
+//              title: Text(title),
+//              content: Text(body),
+//              actions: <Widget>[
+//                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!להבין מה זה
+//                CupertinoDialogAction(
+//                  isDefaultAction: true,
+//                  child: Text("Ok"),
+//                  onPressed: () {
+//                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!צריך להוריד את החלק הזה - לא עובד
+//                    if (_deviceNameByID == "עומר") {
+//                      Firestore.instance
+//                          .collection('booleans')
+//                          .document('lukAMY1dkyDsuTpdCtZr')
+//                          .updateData({"georgyAwakeOpacity": 1.0});
+//                      Firestore.instance
+//                          .collection('booleans')
+//                          .document('lukAMY1dkyDsuTpdCtZr')
+//                          .updateData({"georgyAsleepOpacity": 1.0});
+//                    }
+//                  },
+//                )
+//              ],
+//            ));
+//  }
+//
+//  Future onSelectNotification(String payload) async {
+////    Firestore.instance.collection('booleans').document('lukAMY1dkyDsuTpdCtZr').updateData({"georgyAwakeOpacity": 1.0});
+//
+//  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!צריך להוריד את החלק הזה - לא עובד
+//    if (_deviceNameByID == "עומר") {
+//      Firestore.instance
+//          .collection('booleans')
+//          .document('lukAMY1dkyDsuTpdCtZr')
+//          .updateData({"georgyAwakeOpacity": 1.0});
+//      Firestore.instance
+//          .collection('booleans')
+//          .document('lukAMY1dkyDsuTpdCtZr')
+//          .updateData({"georgyAsleepOpacity": 1.0});
+//    }
+//  }
 }

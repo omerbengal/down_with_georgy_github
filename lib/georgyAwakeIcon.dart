@@ -23,20 +23,22 @@ class GeorgyAwakeIcon extends StatefulWidget {
   static String getWhoWentDownNoon() {
     return _GeorgyAwakeIconState._whoWentDownNoon;
   }
-
 }
 
 class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
-
   static double _georgyAwakeOpacity = 1;
   static String _whoWentDownNoon = "";
+  static String _noonDate = "";
+  static String _noonTime = "";
   Timer timer;
   bool awakeTextVisability = false;
-//  static bool NoonNotification = false;
 
+//  static bool NoonNotification = false;
 
   @override
   initState() {
+    getAwakeDate();
+    getAwakeTime();
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
       getAwakeOpacity();
@@ -50,21 +52,13 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-    double screenHeight = (MediaQuery
-        .of(context)
-        .size
-        .height);
+    double screenHeight = (MediaQuery.of(context).size.height);
 
     return Container(
       margin: EdgeInsets.fromLTRB(
-          screenHeight * 0.08,
-          screenHeight * 0.025,
-          screenHeight * 0.08,
-          screenHeight * 0.022),
+          screenHeight * 0.08, 0, screenHeight * 0.08, screenHeight * 0.01),
       child: GestureDetector(
         child: Stack(
           alignment: Alignment.center,
@@ -88,11 +82,36 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
               child: Center(
                 child: Visibility(
                   visible: awakeTextVisability,
-                  child: Text(
-                    _whoWentDownNoon,
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: screenHeight * 0.06, fontFamily: 'SpecialFont',),
+                  child: Column(
+                    children: <Widget>[
+                      Text(
+                        _whoWentDownNoon,
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.09,
+                          fontFamily: 'SpecialFont',
+                        ),
+                      ),
+                      Text(
+                        _noonDate,
+                        textDirection: TextDirection.ltr,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.05,
+                          fontFamily: 'SpecialFont',
+                        ),
+                      ),
+                      Text(
+                        _noonTime,
+                        textDirection: TextDirection.ltr,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: screenHeight * 0.05,
+                          fontFamily: 'SpecialFont',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -100,7 +119,8 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
           ],
         ),
         onTap: () {
-          if (_georgyAwakeOpacity == 1.0 && GeorgyHomePage.getPremissionToUse()) {
+          if (_georgyAwakeOpacity == 1.0 &&
+              GeorgyHomePage.getPremissionToUse()) {
             Firestore.instance
                 .collection('booleans')
                 .document('lukAMY1dkyDsuTpdCtZr')
@@ -109,7 +129,26 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
             Firestore.instance
                 .collection('booleans')
                 .document('lukAMY1dkyDsuTpdCtZr')
-                .updateData({"whoWentDownNoon": GeorgyHomePage.getDeviceName()});
+                .updateData(
+                    {"whoWentDownNoon": GeorgyHomePage.getDeviceName()});
+
+            Firestore.instance
+                .collection('booleans')
+                .document('lukAMY1dkyDsuTpdCtZr')
+                .updateData({
+              "NoonDate": DateTime.now().day.toString() +
+                  " / " +
+                  DateTime.now().month.toString()
+            });
+
+            Firestore.instance
+                .collection('booleans')
+                .document('lukAMY1dkyDsuTpdCtZr')
+                .updateData({
+              "NoonTime": DateTime.now().hour.toString() +
+                  ":" +
+                  DateTime.now().minute.toString()
+            });
 
 //            Firestore.instance
 //                .collection('booleans')
@@ -117,11 +156,62 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
 //                .updateData({"NoonNotification": true});
           }
           getAwakeOpacity();
-          },
+          getAwakeDate();
+          getAwakeTime();
+        },
       ),
     );
   }
 
+//  String setAwakeTime() {
+//    if (_noonDateTime.minute.toInt() < 10) {
+//      return _noonDateTime.hour.toString() +
+//          ":0" +
+//          _noonDateTime.minute.toString();
+//    } else {
+//      return _noonDateTime.hour.toString() +
+//          ":" +
+//          _noonDateTime.minute.toString();
+//    }
+//  }
+//
+//  String setAwakeDate() {
+//    return _noonDateTime.day.toString() +
+//        " / " +
+//        _noonDateTime.month.toString();
+//  }
+
+  Future<void> getAwakeDate() async {
+    await Firestore.instance
+        .collection('booleans')
+        .document('lukAMY1dkyDsuTpdCtZr')
+        .get()
+        .then((value) {
+      for (int i = 0; i < value.data.values.toList().length; i++) {
+        if (value.data.keys.toList()[i] == "NoonDate") {
+          setState(() {
+            _noonDate = value.data.values.toList()[i];
+          });
+        }
+      }
+    });
+  }
+
+  Future<void> getAwakeTime() async {
+    await Firestore.instance
+        .collection('booleans')
+        .document('lukAMY1dkyDsuTpdCtZr')
+        .get()
+        .then((value) {
+      for (int i = 0; i < value.data.values.toList().length; i++) {
+        if (value.data.keys.toList()[i] == "NoonTime") {
+          setState(() {
+            _noonTime = value.data.values.toList()[i];
+          });
+        }
+      }
+    });
+  }
 
   Future<void> getAwakeOpacity() async {
     Firestore.instance
@@ -142,12 +232,11 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
       });
     });
 
-    if(_georgyAwakeOpacity == 1) {
+    if (_georgyAwakeOpacity == 1) {
       awakeTextVisability = false;
     } else if (_georgyAwakeOpacity == 0.4) {
       awakeTextVisability = true;
     }
-
   }
 
   static void setAwakeOpacity(double opacity) {
@@ -172,6 +261,4 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
 //    });
 //  }
 
-
 }
-
