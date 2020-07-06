@@ -3,7 +3,6 @@ import 'home.dart';
 
 void main() {
   runApp(new MaterialApp(
-//      home: GeorgyHomePage(),
       home: GeorgyHomePage(),
       debugShowCheckedModeBanner: false));
 }
