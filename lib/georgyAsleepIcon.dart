@@ -26,7 +26,7 @@ class GeorgyAsleepIcon extends StatefulWidget {
 }
 
 class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
-  static double _georgyAsleepOpacity = 1;
+  static double _georgyAsleepOpacity = 1.0;
   static String _whoWentDownEvening = "";
   static String _eveningDate = "";
   static String _eveningTime = "";
@@ -42,6 +42,8 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
       getAsleepOpacity();
+      getAsleepDate();
+      getAsleepTime();
 //      getEveningNotification();
     });
   }
@@ -130,7 +132,7 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
                 .collection('booleans')
                 .document('lukAMY1dkyDsuTpdCtZr')
                 .updateData(
-                    {"whoWentDownEvening": GeorgyHomePage.getDeviceName()});
+                {"whoWentDownEvening": GeorgyHomePage.getDeviceName()});
 
             Firestore.instance
                 .collection('booleans')
@@ -144,11 +146,7 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
             Firestore.instance
                 .collection('booleans')
                 .document('lukAMY1dkyDsuTpdCtZr')
-                .updateData({
-              "EveningTime": DateTime.now().hour.toString() +
-                  ":" +
-                  DateTime.now().minute.toString()
-            });
+                .updateData({"EveningTime": setEveningTime()});
 
 //            Firestore.instance
 //                .collection('booleans')
@@ -180,6 +178,18 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
 //        " / " +
 //        _eveningDateTime.month.toString();
 //  }
+
+  String setEveningTime() {
+    if (DateTime.now().minute < 10) {
+      return DateTime.now().hour.toString() +
+          ":0" +
+          DateTime.now().minute.toString();
+    } else {
+      return DateTime.now().hour.toString() +
+          ":" +
+          DateTime.now().minute.toString();
+    }
+  }
 
   Future<void> getAsleepDate() async {
     await Firestore.instance
@@ -219,18 +229,21 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
         .document('lukAMY1dkyDsuTpdCtZr')
         .get()
         .then((value) {
-      setState(() {
+
         for (int i = 0; i < value.data.values.toList().length; i++) {
           if (value.data.keys.toList()[i] == "georgyAsleepOpacity") {
-            _georgyAsleepOpacity = value.data.values.toList()[i];
+            setState(() {
+              _georgyAsleepOpacity = value.data.values.toList()[i].toDouble();
+            });
           }
 
           if (value.data.keys.toList()[i] == "whoWentDownEvening") {
-            _whoWentDownEvening = value.data.values.toList()[i];
+            setState(() {
+              _whoWentDownEvening = value.data.values.toList()[i];
+            });
           }
         }
       });
-    });
 
     if (_georgyAsleepOpacity == 1) {
       AsleepTextVisability = false;
@@ -246,19 +259,4 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
   static double getOpacity() {
     return _georgyAsleepOpacity;
   }
-
-//  Future<void> getEveningNotification() async {
-//    await Firestore.instance
-//        .collection('booleans')
-//        .document('lukAMY1dkyDsuTpdCtZr')
-//        .get()
-//        .then((value) {
-//      for (int i = 0; i < value.data.values.toList().length; i++) {
-//        if (value.data.keys.toList()[i] == "EveningNotification") {
-//          EveningNotification = value.data.values.toList()[i];
-//        }
-//      }
-//    });
-//  }
-
 }

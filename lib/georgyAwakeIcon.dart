@@ -26,7 +26,7 @@ class GeorgyAwakeIcon extends StatefulWidget {
 }
 
 class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
-  static double _georgyAwakeOpacity = 1;
+  static double _georgyAwakeOpacity = 1.0;
   static String _whoWentDownNoon = "";
   static String _noonDate = "";
   static String _noonTime = "";
@@ -42,6 +42,8 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
       getAwakeOpacity();
+      getAwakeDate();
+      getAwakeTime();
 //      getNoonNotification();
     });
   }
@@ -130,7 +132,7 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
                 .collection('booleans')
                 .document('lukAMY1dkyDsuTpdCtZr')
                 .updateData(
-                    {"whoWentDownNoon": GeorgyHomePage.getDeviceName()});
+                {"whoWentDownNoon": GeorgyHomePage.getDeviceName()});
 
             Firestore.instance
                 .collection('booleans')
@@ -145,9 +147,7 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
                 .collection('booleans')
                 .document('lukAMY1dkyDsuTpdCtZr')
                 .updateData({
-              "NoonTime": DateTime.now().hour.toString() +
-                  ":" +
-                  DateTime.now().minute.toString()
+              "NoonTime": setNoonTime()
             });
 
 //            Firestore.instance
@@ -163,23 +163,17 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
     );
   }
 
-//  String setAwakeTime() {
-//    if (_noonDateTime.minute.toInt() < 10) {
-//      return _noonDateTime.hour.toString() +
-//          ":0" +
-//          _noonDateTime.minute.toString();
-//    } else {
-//      return _noonDateTime.hour.toString() +
-//          ":" +
-//          _noonDateTime.minute.toString();
-//    }
-//  }
-//
-//  String setAwakeDate() {
-//    return _noonDateTime.day.toString() +
-//        " / " +
-//        _noonDateTime.month.toString();
-//  }
+  String setNoonTime() {
+    if (DateTime.now().minute < 10) {
+      return DateTime.now().hour.toString() +
+          ":0" +
+          DateTime.now().minute.toString();
+    } else {
+      return DateTime.now().hour.toString() +
+          ":" +
+          DateTime.now().minute.toString();
+    }
+  }
 
   Future<void> getAwakeDate() async {
     await Firestore.instance
@@ -219,17 +213,20 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
         .document('lukAMY1dkyDsuTpdCtZr')
         .get()
         .then((value) {
-      setState(() {
+
         for (int i = 0; i < value.data.values.toList().length; i++) {
           if (value.data.keys.toList()[i] == "georgyAwakeOpacity") {
-            _georgyAwakeOpacity = value.data.values.toList()[i];
+            setState(() {
+              _georgyAwakeOpacity = value.data.values.toList()[i].toDouble();
+            });
           }
 
           if (value.data.keys.toList()[i] == "whoWentDownNoon") {
-            _whoWentDownNoon = value.data.values.toList()[i];
+            setState(() {
+              _whoWentDownNoon = value.data.values.toList()[i];
+            });
           }
         }
-      });
     });
 
     if (_georgyAwakeOpacity == 1) {
@@ -246,19 +243,5 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
   static double getOpacity() {
     return _georgyAwakeOpacity;
   }
-
-//  Future<void> getNoonNotification() async {
-//    await Firestore.instance
-//        .collection('booleans')
-//        .document('lukAMY1dkyDsuTpdCtZr')
-//        .get()
-//        .then((value) {
-//      for (int i = 0; i < value.data.values.toList().length; i++) {
-//        if (value.data.keys.toList()[i] == "NoonNotification") {
-//          NoonNotification = value.data.values.toList()[i];
-//        }
-//      }
-//    });
-//  }
 
 }
