@@ -6,6 +6,7 @@ import 'package:device_id/device_id.dart';
 import 'package:flutter/services.dart';
 import 'georgyAwakeIcon.dart';
 import 'georgyAsleepIcon.dart';
+import 'package:share/share.dart';
 
 class GeorgyHomePage extends StatefulWidget {
   @override
@@ -133,7 +134,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                                 Scaffold.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      "הID שלך *הועתק*. אם האפליקציה לא עובדת יש לשלוח את הID לעומר בוואטסאפ (ללכת לוואטסאפ ולהדביק).",
+                                      "מסך שיתוף הולך להיפתח - לשלוח לעומר בוואטסאפ",
                                       textDirection: TextDirection.rtl,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
@@ -142,6 +143,9 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                                     duration: const Duration(seconds: 6),
                                   ),
                                 );
+                                new Timer(const Duration(seconds: 6), () => Share.share(deviceID));
+
+
                               })),
                       Container(
                           margin: EdgeInsets.fromLTRB(screenHeight * 0.05,

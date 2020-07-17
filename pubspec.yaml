@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   cloud_firestore:
+  share:
   device_id:
   flutter:
     sdk: flutter
