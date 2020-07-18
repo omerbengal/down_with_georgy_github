@@ -20,10 +20,15 @@ class GeorgyHomePage extends StatefulWidget {
   static String getDeviceName() {
     return _GeorgyHomePageState._deviceNameByID;
   }
+
+  static int getCurrentPage() {
+    return _GeorgyHomePageState._selectedPage;
+  }
 }
 
 class _GeorgyHomePageState extends State<GeorgyHomePage> {
 
+  static int _selectedPage = 0;
   bool _premissionToReset = false;
   var dbForUsing;
   static bool _premissionToUse = false;
@@ -32,6 +37,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   Timer timer;
   static String _deviceNameByID;
   String omerDeviceID;
+  PageController controller = new PageController();
 
   @override
   initState() {
@@ -85,6 +91,12 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
         centerTitle: true,
       ),
       body: PageView(
+        onPageChanged: (index) {
+          setState(() {
+            _selectedPage = index;
+          });
+        },
+        controller: controller,
         children: <Widget>[
           Builder(
             builder: (BuildContext context) {
@@ -97,7 +109,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                       Center(
                         child: Container(
                           padding: EdgeInsets.fromLTRB(
-                              0, screenHeight * 0.01, 0, screenHeight * 0.01),
+                              0, screenHeight * 0.01, 0, 0),
                           child: Text("היום: " +
                               DateTime
                                   .now()
@@ -122,7 +134,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                         children: <Widget>[
                           Container(
                               margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
-                                  screenHeight * 0.01, screenHeight * 0.05, 0),
+                                  0, screenHeight * 0.05, 0),
                               child: IconButton(
                                   iconSize: (MediaQuery
                                       .of(context)
@@ -147,12 +159,10 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                                       ),
                                     );
                                     new Timer(const Duration(seconds: 6), () => Share.share(deviceID));
-
-
                                   })),
                           Container(
                               margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
-                                  screenHeight * 0.01, screenHeight * 0.05, 0),
+                                  0, screenHeight * 0.05, 0),
                               child: IconButton(
                                   iconSize: (MediaQuery
                                       .of(context)
@@ -201,6 +211,19 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
           ),
           ParkPage(),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.pets), title: Text("ג'ורג'י")),
+          BottomNavigationBarItem(icon: Icon(Icons.directions_car), title: Text("חנייה")),
+        ],
+        currentIndex: _selectedPage,
+        onTap: (index) {
+          setState(() {
+            _selectedPage = index;
+            controller.animateToPage(_selectedPage, duration: Duration(milliseconds: 750), curve: Curves.linearToEaseOut);
+          });
+        },
       ),
     );
   }

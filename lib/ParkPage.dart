@@ -12,17 +12,17 @@ import 'package:photo_view/photo_view.dart';
 class ParkPage extends StatefulWidget {
   @override
   _ParkPageState createState() => _ParkPageState();
-
 }
 
 class _ParkPageState extends State<ParkPage> {
 
-  double xPoint;
-  double yPoint;
+  double xPoint = -20.0;
+  double yPoint = -20.0;
   Timer timer;
 
   @override
   initState() {
+    getXAndYCoordinates();
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
         getXAndYCoordinates();
@@ -57,26 +57,21 @@ class _ParkPageState extends State<ParkPage> {
         Container(
           color: Colors.blue[100],
           child: Center(
-            child: PhotoView(
-              imageProvider: AssetImage('images/BorochovAirMap.png'),
-              backgroundDecoration: BoxDecoration(color: Colors.blue[100]),
-            ),
+            child: Image.asset(
+              'images/BorochovAirMap.png',
+            )
           ),
         ),
         Positioned(
-          top: yPoint,
-          left: xPoint,
-          child: Container(
-            color: Colors.green,
-            width: 20.0,
-            height: 20.0,
-          ),
+          top: yPoint - 20.0,
+          left: xPoint - 20.0,
+          child: Icon(Icons.directions_car, color: Colors.blue, size: 40.0,)
         ),
         Container(
           width: screenwidth,
           height: screenHeight,
           child: GestureDetector(
-            onTapDown: (TapDownDetails details) => _onTap(details),
+            onTapUp: (TapUpDetails details) => _onTap(details),
           ),
         ),
       ],
@@ -108,7 +103,7 @@ class _ParkPageState extends State<ParkPage> {
     });
   }
 
-  _onTap(TapDownDetails details) {
+  _onTap(TapUpDetails details) {
     Firestore.instance
         .collection('booleans')
         .document('Parking')

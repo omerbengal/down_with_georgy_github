@@ -42,10 +42,12 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
     getAsleepTime();
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
-      getAsleepOpacity();
-      getAsleepDate();
-      getAsleepTime();
-//      getEveningNotification();
+
+      if(GeorgyHomePage.getCurrentPage() == 0) {
+        getAsleepOpacity();
+        getAsleepDate();
+        getAsleepTime();
+      }
     });
   }
 
@@ -60,8 +62,8 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
     double screenHeight = (MediaQuery.of(context).size.height);
 
     return Container(
-      margin: EdgeInsets.fromLTRB(screenHeight * 0.08, screenHeight * 0.025,
-          screenHeight * 0.08, screenHeight * 0.01),
+      margin: EdgeInsets.fromLTRB(screenHeight * 0.08, screenHeight * 0.01,
+          screenHeight * 0.08, 0),
       child: GestureDetector(
         child: Stack(
           alignment: Alignment.center,

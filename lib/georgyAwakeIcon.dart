@@ -42,10 +42,11 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
     getAwakeTime();
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 100), (Timer t) {
-      getAwakeOpacity();
-      getAwakeDate();
-      getAwakeTime();
-//      getNoonNotification();
+      if(GeorgyHomePage.getCurrentPage() == 0) {
+        getAwakeOpacity();
+        getAwakeDate();
+        getAwakeTime();
+      }
     });
   }
 
@@ -61,7 +62,7 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
 
     return Container(
       margin: EdgeInsets.fromLTRB(
-          screenHeight * 0.08, 0, screenHeight * 0.08, screenHeight * 0.01),
+          screenHeight * 0.08, 0, screenHeight * 0.08, 0),
       child: GestureDetector(
         child: Stack(
           alignment: Alignment.center,
