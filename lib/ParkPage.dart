@@ -65,8 +65,8 @@ class _ParkPageState extends State<ParkPage> {
           ),
         ),
         Positioned(
-            top: yPoint - 20.0,
-            left: xPoint - 20.0,
+            top: yPoint - (screenHeight / 17)/2,
+            left: xPoint - (screenHeight / 17)/2,
             child: Icon(Icons.directions_car, color: Colors.blue,
               size: screenHeight / 17,)
         ),
