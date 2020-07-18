@@ -22,10 +22,10 @@ class _ParkPageState extends State<ParkPage> {
 
   @override
   initState() {
-    getXAndYCoordinates();
+    getXAndYCoordinates(context);
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 200), (Timer t) {
-        getXAndYCoordinates();
+      getXAndYCoordinates(context);
     });
   }
 
@@ -38,7 +38,6 @@ class _ParkPageState extends State<ParkPage> {
 
   @override
   Widget build(BuildContext context) {
-
     double screenHeight = (MediaQuery
         .of(context)
         .size
@@ -57,29 +56,32 @@ class _ParkPageState extends State<ParkPage> {
         Container(
           color: Colors.blue[100],
           child: Center(
-            child: Image.asset(
-              'images/BorochovAirMap.png',
-            )
+              child: Image.asset(
+                'images/BorochovAirMap.png',
+                width: screenwidth,
+                height: screenHeight,
+                fit: BoxFit.fill,
+              )
           ),
         ),
         Positioned(
-          top: yPoint - 20.0,
-          left: xPoint - 20.0,
-          child: Icon(Icons.directions_car, color: Colors.blue, size: 40.0,)
+            top: yPoint - 20.0,
+            left: xPoint - 20.0,
+            child: Icon(Icons.directions_car, color: Colors.blue,
+              size: screenHeight / 17,)
         ),
         Container(
           width: screenwidth,
           height: screenHeight,
           child: GestureDetector(
-            onTapUp: (TapUpDetails details) => _onTap(details),
+            onTapUp: (TapUpDetails details) => _onTap(details, context),
           ),
         ),
       ],
     );
-
   }
 
-  Future<void> getXAndYCoordinates() async {
+  Future<void> getXAndYCoordinates(BuildContext context) async {
     await Firestore.instance
         .collection('booleans')
         .document('Parking')
@@ -90,33 +92,46 @@ class _ParkPageState extends State<ParkPage> {
           .length; i++) {
         if (value.data.keys.toList()[i] == "xCoordinates") {
           setState(() {
-            xPoint = value.data.values.toList()[i].toDouble();
+            xPoint = (value.data.values.toList()[i].toDouble() * (MediaQuery
+                .of(context)
+                .size
+                .width)) / 100;
           });
         }
 
         if (value.data.keys.toList()[i] == "yCoordinates") {
           setState(() {
-            yPoint = value.data.values.toList()[i].toDouble();
+            yPoint = (value.data.values.toList()[i].toDouble() * (MediaQuery
+                .of(context)
+                .size
+                .height)) / 100;
           });
         }
       }
     });
   }
 
-  _onTap(TapUpDetails details) {
+  _onTap(TapUpDetails details, BuildContext context) {
     Firestore.instance
         .collection('booleans')
         .document('Parking')
         .updateData({
-      "xCoordinates": details.localPosition.dx
+      "xCoordinates": (details.localPosition.dx * 100) / (MediaQuery
+          .of(context)
+          .size
+          .width)
     });
 
     Firestore.instance
         .collection('booleans')
         .document('Parking')
         .updateData({
-      "yCoordinates": details.localPosition.dy
+      "yCoordinates": (details.localPosition.dy * 100) / (MediaQuery
+          .of(context)
+          .size
+          .height)
     });
+
   }
 }
 
