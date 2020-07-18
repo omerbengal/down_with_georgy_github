@@ -37,6 +37,7 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
 
   @override
   initState() {
+    getAwakeOpacity();
     getAwakeDate();
     getAwakeTime();
     super.initState();
@@ -125,29 +126,29 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
               GeorgyHomePage.getPremissionToUse()) {
             Firestore.instance
                 .collection('booleans')
-                .document('lukAMY1dkyDsuTpdCtZr')
-                .updateData({"georgyAwakeOpacity": 0.4});
+                .document('GeorgyNoon')
+                .updateData({"Opacity": 0.4});
 
             Firestore.instance
                 .collection('booleans')
-                .document('lukAMY1dkyDsuTpdCtZr')
+                .document('GeorgyNoon')
                 .updateData(
-                {"whoWentDownNoon": GeorgyHomePage.getDeviceName()});
+                {"WhoWentDown": GeorgyHomePage.getDeviceName()});
 
             Firestore.instance
                 .collection('booleans')
-                .document('lukAMY1dkyDsuTpdCtZr')
+                .document('GeorgyNoon')
                 .updateData({
-              "NoonDate": DateTime.now().day.toString() +
+              "Date": DateTime.now().day.toString() +
                   " / " +
                   DateTime.now().month.toString()
             });
 
             Firestore.instance
                 .collection('booleans')
-                .document('lukAMY1dkyDsuTpdCtZr')
+                .document('GeorgyNoon')
                 .updateData({
-              "NoonTime": setNoonTime()
+              "Time": setNoonTime()
             });
 
 //            Firestore.instance
@@ -178,11 +179,11 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
   Future<void> getAwakeDate() async {
     await Firestore.instance
         .collection('booleans')
-        .document('lukAMY1dkyDsuTpdCtZr')
+        .document('GeorgyNoon')
         .get()
         .then((value) {
       for (int i = 0; i < value.data.values.toList().length; i++) {
-        if (value.data.keys.toList()[i] == "NoonDate") {
+        if (value.data.keys.toList()[i] == "Date") {
           setState(() {
             _noonDate = value.data.values.toList()[i];
           });
@@ -194,11 +195,11 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
   Future<void> getAwakeTime() async {
     await Firestore.instance
         .collection('booleans')
-        .document('lukAMY1dkyDsuTpdCtZr')
+        .document('GeorgyNoon')
         .get()
         .then((value) {
       for (int i = 0; i < value.data.values.toList().length; i++) {
-        if (value.data.keys.toList()[i] == "NoonTime") {
+        if (value.data.keys.toList()[i] == "Time") {
           setState(() {
             _noonTime = value.data.values.toList()[i];
           });
@@ -210,18 +211,18 @@ class _GeorgyAwakeIconState extends State<GeorgyAwakeIcon> {
   Future<void> getAwakeOpacity() async {
     Firestore.instance
         .collection('booleans')
-        .document('lukAMY1dkyDsuTpdCtZr')
+        .document('GeorgyNoon')
         .get()
         .then((value) {
 
         for (int i = 0; i < value.data.values.toList().length; i++) {
-          if (value.data.keys.toList()[i] == "georgyAwakeOpacity") {
+          if (value.data.keys.toList()[i] == "Opacity") {
             setState(() {
               _georgyAwakeOpacity = value.data.values.toList()[i].toDouble();
             });
           }
 
-          if (value.data.keys.toList()[i] == "whoWentDownNoon") {
+          if (value.data.keys.toList()[i] == "WhoWentDown") {
             setState(() {
               _whoWentDownNoon = value.data.values.toList()[i];
             });

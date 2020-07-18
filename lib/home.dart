@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'georgyAwakeIcon.dart';
 import 'georgyAsleepIcon.dart';
 import 'package:share/share.dart';
+import 'ParkPage.dart';
 
 class GeorgyHomePage extends StatefulWidget {
   @override
@@ -36,7 +37,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   initState() {
     getDeviceID();
     getDevicesIDFromFirebase();
-    getOmerDviceID();
+    getOmerDeviceID();
     super.initState();
   }
 
@@ -69,7 +70,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
       appBar: AppBar(
         title: GestureDetector(
           child: Text(
-            "ג׳ורג׳י!",
+            "משפחת בנגל 🙌🏻",
             style: TextStyle(
               fontSize: screenHeight * 0.05,
             ),
@@ -83,118 +84,123 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
         ),
         centerTitle: true,
       ),
-      body: Builder(
-        builder: (BuildContext context) {
-          return RefreshIndicator(
-            onRefresh: refreshFunctions,
-            child: Container(
-              decoration: BoxDecoration(color: Colors.blue[100]),
-              child: ListView(
-                children: <Widget>[
-                  Center(
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(
-                          0, screenHeight * 0.01, 0, screenHeight * 0.01),
-                      child: Text("היום: " +
-                          DateTime
-                              .now()
-                              .month
-                              .toString() +
-                          " / " +
-                          DateTime
-                              .now()
-                              .day
-                              .toString(),
-                        style: TextStyle(
-                          fontSize: screenHeight / 25,
-                          fontFamily: 'SpecialFont',
-                        ),
-                        textDirection: TextDirection.rtl,),
-                    ),
-                  ),
-                  GeorgyAwakeIcon(),
-                  GeorgyAsleepIcon(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      body: PageView(
+        children: <Widget>[
+          Builder(
+            builder: (BuildContext context) {
+              return RefreshIndicator(
+                onRefresh: refreshFunctions,
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.blue[100]),
+                  child: ListView(
                     children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
-                              screenHeight * 0.01, screenHeight * 0.05, 0),
-                          child: IconButton(
-                              iconSize: (MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height -
-                                  AppBar().preferredSize.height) *
-                                  0.055,
-                              icon: Icon(Icons.add_to_home_screen),
-                              onPressed: () {
-                                Clipboard.setData(
-                                    new ClipboardData(text: deviceID));
-                                Scaffold.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "מסך שיתוף הולך להיפתח - לשלוח לעומר בוואטסאפ",
-                                      textDirection: TextDirection.rtl,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: screenHeight * 0.018),
-                                    ),
-                                    duration: const Duration(seconds: 6),
-                                  ),
-                                );
-                                new Timer(const Duration(seconds: 6), () => Share.share(deviceID));
-
-
-                              })),
-                      Container(
-                          margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
-                              screenHeight * 0.01, screenHeight * 0.05, 0),
-                          child: IconButton(
-                              iconSize: (MediaQuery
-                                  .of(context)
-                                  .size
-                                  .height -
-                                  AppBar().preferredSize.height) *
-                                  0.055,
-                              icon: Icon(Icons.cancel),
-                              onPressed: _premissionToUse
-                                  ? () {
-                                if (_premissionToReset ||
-                                    deviceID == omerDeviceID) {
-                                  if (GeorgyAwakeIcon.getOpacity() ==
-                                      0.4 ||
-                                      GeorgyAsleepIcon.getOpacity() ==
-                                          0.4) {
-                                    _thingsToCancelDialog();
-                                  } else {
-                                    _noThingsToDoDialog();
-                                  }
-                                } else {
-                                  Scaffold.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        _deviceNameByID +
-                                            ', '
-                                                'אין לך הרשאות לבטל ירידה... נא לפנות לעומר בנגל המלך!'
-                                                ' (או למצוא את הEASTER EGG)',
-                                        textDirection: TextDirection.rtl,
+                      Center(
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(
+                              0, screenHeight * 0.01, 0, screenHeight * 0.01),
+                          child: Text("היום: " +
+                              DateTime
+                                  .now()
+                                  .month
+                                  .toString() +
+                              " / " +
+                              DateTime
+                                  .now()
+                                  .day
+                                  .toString(),
+                            style: TextStyle(
+                              fontSize: screenHeight / 25,
+                              fontFamily: 'SpecialFont',
+                            ),
+                            textDirection: TextDirection.rtl,),
+                        ),
+                      ),
+                      GeorgyAwakeIcon(),
+                      GeorgyAsleepIcon(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
+                                  screenHeight * 0.01, screenHeight * 0.05, 0),
+                              child: IconButton(
+                                  iconSize: (MediaQuery
+                                      .of(context)
+                                      .size
+                                      .height -
+                                      AppBar().preferredSize.height) *
+                                      0.055,
+                                  icon: Icon(Icons.add_to_home_screen),
+                                  onPressed: () {
+                                    Clipboard.setData(
+                                        new ClipboardData(text: deviceID));
+                                    Scaffold.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          "מסך שיתוף הולך להיפתח - לשלוח לעומר בוואטסאפ",
+                                          textDirection: TextDirection.rtl,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: screenHeight * 0.018),
+                                        ),
+                                        duration: const Duration(seconds: 6),
                                       ),
-                                      duration:
-                                      const Duration(seconds: 3),
-                                    ),
-                                  );
-                                }
-                              }
-                                  : null)),
+                                    );
+                                    new Timer(const Duration(seconds: 6), () => Share.share(deviceID));
+
+
+                                  })),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
+                                  screenHeight * 0.01, screenHeight * 0.05, 0),
+                              child: IconButton(
+                                  iconSize: (MediaQuery
+                                      .of(context)
+                                      .size
+                                      .height -
+                                      AppBar().preferredSize.height) *
+                                      0.055,
+                                  icon: Icon(Icons.cancel),
+                                  onPressed: _premissionToUse
+                                      ? () {
+                                    if (_premissionToReset ||
+                                        deviceID == omerDeviceID) {
+                                      if (GeorgyAwakeIcon.getOpacity() ==
+                                          0.4 ||
+                                          GeorgyAsleepIcon.getOpacity() ==
+                                              0.4) {
+                                        _thingsToCancelDialog();
+                                      } else {
+                                        _noThingsToDoDialog();
+                                      }
+                                    } else {
+                                      Scaffold.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            _deviceNameByID +
+                                                ', '
+                                                    'אין לך הרשאות לבטל ירידה... נא לפנות לעומר בנגל המלך!'
+                                                    ' (או למצוא את הEASTER EGG)',
+                                            textDirection: TextDirection.rtl,
+                                          ),
+                                          duration:
+                                          const Duration(seconds: 3),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                      : null)),
+                        ],
+                      )
                     ],
-                  )
-                ],
-              ),
-              alignment: Alignment.center,
-            ),
-          );
-        },
+                  ),
+                  alignment: Alignment.center,
+                ),
+              );
+            },
+          ),
+          ParkPage(),
+        ],
       ),
     );
   }
@@ -243,8 +249,8 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                   setState(() {
                     Firestore.instance
                         .collection('booleans')
-                        .document('lukAMY1dkyDsuTpdCtZr')
-                        .updateData({"georgyAsleepOpacity": 1.0});
+                        .document('GeorgyEvening')
+                        .updateData({"Opacity": 1.0});
                   });
                   Navigator.of(context).pop();
                 },
@@ -265,8 +271,8 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                   setState(() {
                     Firestore.instance
                         .collection('booleans')
-                        .document('lukAMY1dkyDsuTpdCtZr')
-                        .updateData({"georgyAwakeOpacity": 1.0});
+                        .document('GeorgyNoon')
+                        .updateData({"Opacity": 1.0});
                   });
                   Navigator.of(context).pop();
                 },
@@ -328,17 +334,39 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   }
 
   Future<void> getOpacity() async {
-    Firestore.instance
+    await Firestore.instance
         .collection('booleans')
-        .document('lukAMY1dkyDsuTpdCtZr')
+        .document('GeorgyNoon')
         .get()
         .then((value) {
-      setState(() {
-        GeorgyAwakeIcon.setOpacity(value.data.values.toList()[1].toDouble());
-        GeorgyAsleepIcon.setOpacity(value.data.values.toList()[0].toDouble());
-      });
+      for (int i = 0; i < value.data.values
+          .toList()
+          .length; i++) {
+        if (value.data.keys.toList()[i] == "Opacity") {
+          setState(() {
+            GeorgyAwakeIcon.setOpacity(value.data.values.toList()[i].toDouble());
+          });
+        }
+      }
+    });
+
+    await Firestore.instance
+        .collection('booleans')
+        .document('GeorgyEvening')
+        .get()
+        .then((value) {
+      for (int i = 0; i < value.data.values
+          .toList()
+          .length; i++) {
+        if (value.data.keys.toList()[i] == "Opacity") {
+          setState(() {
+            GeorgyAsleepIcon.setOpacity(value.data.values.toList()[i].toDouble());
+          });
+        }
+      }
     });
   }
+
 
   Future<void> getDeviceID() async {
     deviceID = await DeviceId.getID;
@@ -347,7 +375,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   Future<void> getDevicesIDFromFirebase() async {
     await Firestore.instance
         .collection('booleans')
-        .document('uIX5KE7Wv07PcoYPOlyJ')
+        .document('devices')
         .get()
         .then((value) {
       setState(() {
@@ -371,7 +399,9 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   void isAllowedToUseApp() {
     for (int i = 0; i < idList.length; i++) {
       if (deviceID == idList[i]) {
-        _premissionToUse = true;
+        setState(() {
+          _premissionToUse = true;
+        });
         break;
       }
     }
@@ -380,20 +410,22 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   Future<void> refreshFunctions() async {
     await getOpacity();
     await getDevicesIDFromFirebase();
-    await getOmerDviceID();
+    await getOmerDeviceID();
   }
 
-  Future<void> getOmerDviceID() async {
+  Future<void> getOmerDeviceID() async {
     await Firestore.instance
         .collection('booleans')
-        .document('uIX5KE7Wv07PcoYPOlyJ')
+        .document('devices')
         .get()
         .then((value) {
       for (int i = 0; i < value.data.values
           .toList()
           .length; i++) {
         if (value.data.keys.toList()[i] == "עומר") {
-          omerDeviceID = value.data.values.toList()[i];
+          setState(() {
+            omerDeviceID = value.data.values.toList()[i];
+          });
         }
       }
     });
