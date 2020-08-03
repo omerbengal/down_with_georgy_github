@@ -33,7 +33,7 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
               children: <Widget>[
                 ClipOval(
                   child: AnimatedOpacity(
-                    opacity: snapshot.data.documents[0]['Opacity'].toDouble(),
+                    opacity: snapshot.data.documents[1]['Opacity'].toDouble(),
                     duration: Duration(milliseconds: 300),
                     child: Container(
                       height: screenHeight * 0.33,
@@ -49,11 +49,11 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
 //              margin: EdgeInsets.fromLTRB(0, screenHeight * 0.12, screenHeight * 0.013, 0),
                   child: Center(
                     child: Visibility(
-                      visible: snapshot.data.documents[0]['Opacity'].toDouble() == 1 ? false : true,
+                      visible: snapshot.data.documents[1]['Opacity'].toDouble() == 1 ? false : true,
                       child: Column(
                         children: <Widget>[
                           Text(
-                            snapshot.data.documents[0]['WhoWentDown'],
+                            snapshot.data.documents[1]['WhoWentDown'],
                             textDirection: TextDirection.rtl,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -62,7 +62,7 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
                             ),
                           ),
                           Text(
-                            snapshot.data.documents[0]['Date'],
+                            snapshot.data.documents[1]['Date'],
                             textDirection: TextDirection.ltr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -71,7 +71,7 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
                             ),
                           ),
                           Text(
-                            snapshot.data.documents[0]['Time'],
+                            snapshot.data.documents[1]['Time'],
                             textDirection: TextDirection.ltr,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -87,8 +87,8 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
               ],
             ),
             onTap: () {
-              if (snapshot.data.documents[0]['Opacity'].toDouble() == 1.0 &&
-                  snapshot.data.documents[3].data.containsValue(GeorgyHomePage.getDeviceId())) {
+              if (snapshot.data.documents[1]['Opacity'].toDouble() == 1.0 &&
+                  snapshot.data.documents[4].data.containsValue(GeorgyHomePage.getDeviceId())) {
                 Firestore.instance
                     .collection('booleans')
                     .document('GeorgyEvening')
@@ -98,7 +98,7 @@ class _GeorgyAsleepIconState extends State<GeorgyAsleepIcon> {
                     .collection('booleans')
                     .document('GeorgyEvening')
                     .updateData(
-                    {"WhoWentDown": snapshot.data.documents[3].data.keys.toList().firstWhere((element) => snapshot.data.documents[3].data[element] == GeorgyHomePage.getDeviceId())
+                    {"WhoWentDown": snapshot.data.documents[4].data.keys.toList().firstWhere((element) => snapshot.data.documents[4].data[element] == GeorgyHomePage.getDeviceId())
                     });
 
                 Firestore.instance

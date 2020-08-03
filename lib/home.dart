@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:device_id/device_id.dart';
 import 'package:flutter/services.dart';
 import 'georgyAwakeIcon.dart';
@@ -24,10 +26,13 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   bool _premissionToReset = false;
   static String deviceID = "";
   PageController controller = new PageController();
+//  final FirebaseMessaging _fcm = FirebaseMessaging();
+//  String deviceToken = '';
 
   @override
   initState() {
     getDeviceID();
+//    _getDeviceToken();
     super.initState();
   }
 
@@ -69,6 +74,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
           }
 
           getDeviceID();
+//          _uploadDeviceToken(snapshot.data.documents[4].data.keys.toList().firstWhere((element) => snapshot.data.documents[4].data[element] == deviceID).toString());
           return PageView(
             onPageChanged: (index) {
               setState(() {
@@ -148,13 +154,13 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                                           AppBar().preferredSize.height) *
                                           0.055,
                                       icon: Icon(Icons.cancel),
-                                      onPressed: snapshot.data.documents[3].data.containsValue(deviceID)
+                                      onPressed: snapshot.data.documents[4].data.containsValue(deviceID)
                                           ? () {
                                         if (_premissionToReset ||
-                                            deviceID == snapshot.data.documents[3]['עומר']) {
-                                          if (snapshot.data.documents[1]['Opacity'].toDouble() ==
+                                            deviceID == snapshot.data.documents[4]['עומר']) {
+                                          if (snapshot.data.documents[2]['Opacity'].toDouble() ==
                                               0.4 ||
-                                              snapshot.data.documents[0]['Opacity'].toDouble() ==
+                                              snapshot.data.documents[1]['Opacity'].toDouble() ==
                                                   0.4) {
                                             _thingsToCancelDialog();
                                           } else {
@@ -164,7 +170,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                                           Scaffold.of(context).showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                snapshot.data.documents[3].data.keys.toList().firstWhere((element) => snapshot.data.documents[3].data[element] == deviceID) +
+                                                snapshot.data.documents[4].data.keys.toList().firstWhere((element) => snapshot.data.documents[4].data[element] == deviceID) +
                                                     ', '
                                                         'אין לך הרשאות לבטל ירידה... נא לפנות לעומר בנגל המלך!'
                                                         ' (או למצוא את הEASTER EGG)',
@@ -336,4 +342,15 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   Future<void> getDeviceID() async {
     deviceID = await DeviceId.getID;
   }
+
+//  _getDeviceToken() async {
+//    deviceToken = await _fcm.getToken();
+//  }
+//
+//  _uploadDeviceToken(String field) {
+//    Firestore.instance
+//        .collection('booleans')
+//        .document('FCMTokens')
+//        .updateData({field: deviceToken});
+//  }
 }
