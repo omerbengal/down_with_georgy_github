@@ -49,8 +49,8 @@ class _ParkPageState extends State<ParkPage> {
               ),
             ),
             Positioned(
-                top: snapshot.data.documents[2]['yCoordinates'].toDouble() * (MediaQuery.of(context).size.height) / 100 - (screenHeight / 17)/2,
-                left: snapshot.data.documents[2]['xCoordinates'].toDouble() * (MediaQuery.of(context).size.width) / 100 - (screenHeight / 17)/2,
+                top: snapshot.data.documents[3]['yCoordinates'].toDouble() * (MediaQuery.of(context).size.height) / 100 - (screenHeight / 17)/2,
+                left: snapshot.data.documents[3]['xCoordinates'].toDouble() * (MediaQuery.of(context).size.width) / 100 - (screenHeight / 17)/2,
                 child: Icon(Icons.directions_car, color: Colors.blue,
                   size: screenHeight / 17,)
             ),

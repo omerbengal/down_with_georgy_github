@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:device_id/device_id.dart';
 import 'package:flutter/services.dart';
@@ -26,13 +25,12 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   bool _premissionToReset = false;
   static String deviceID = "";
   PageController controller = new PageController();
-//  final FirebaseMessaging _fcm = FirebaseMessaging();
-//  String deviceToken = '';
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+  String deviceToken = '';
 
   @override
   initState() {
-    getDeviceID();
-//    _getDeviceToken();
+    refreshActions();
     super.initState();
   }
 
@@ -73,8 +71,6 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
             return Text('Loading...');
           }
 
-          getDeviceID();
-//          _uploadDeviceToken(snapshot.data.documents[4].data.keys.toList().firstWhere((element) => snapshot.data.documents[4].data[element] == deviceID).toString());
           return PageView(
             onPageChanged: (index) {
               setState(() {
@@ -84,7 +80,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
             controller: controller,
             children: <Widget>[
               RefreshIndicator(
-                    onRefresh: getDeviceID,
+                    onRefresh: refreshActions,
                     child: Container(
                       decoration: BoxDecoration(color: Colors.blue[100]),
                       child: ListView(
@@ -141,7 +137,7 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
                                             duration: const Duration(seconds: 6),
                                           ),
                                         );
-                                        new Timer(const Duration(seconds: 6), () => Share.share(deviceID));
+                                        new Timer(const Duration(seconds: 6), () => Share.share("deviceID: " + deviceID + "\nFCMToken: " + deviceToken));
                                       })),
                               Container(
                                   margin: EdgeInsets.fromLTRB(screenHeight * 0.05,
@@ -339,18 +335,8 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
     );
   }
 
-  Future<void> getDeviceID() async {
+  Future<void> refreshActions() async {
     deviceID = await DeviceId.getID;
+    deviceToken = await _fcm.getToken();
   }
-
-//  _getDeviceToken() async {
-//    deviceToken = await _fcm.getToken();
-//  }
-//
-//  _uploadDeviceToken(String field) {
-//    Firestore.instance
-//        .collection('booleans')
-//        .document('FCMTokens')
-//        .updateData({field: deviceToken});
-//  }
 }
