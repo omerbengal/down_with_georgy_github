@@ -32,6 +32,9 @@ class _GeorgyHomePageState extends State<GeorgyHomePage> {
   initState() {
     refreshActions();
     super.initState();
+    _fcm.requestNotificationPermissions(
+      const IosNotificationSettings(sound: true, badge: true, alert: true)
+    );
   }
 
   @override
